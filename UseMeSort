@@ -1,0 +1,146 @@
+#include <stdio.h> 
+#include <time.h> 
+#include<stdlib.h>
+
+#include<stdio.h>
+#include<stdlib.h>
+
+
+int asc(int a[],int i,int k,int m)
+{
+	int l,temp,low,high,med;
+	if(m==-1)
+		return 0;
+	
+		temp=a[k-m];
+		l=asc(a,i,k,m-1);
+		if(temp<a[0])
+			low=-1;
+		else 
+			{
+				high=i-1;
+				low=0;
+				do
+				{
+					med=(low+high)/2;
+					if(temp>a[med])
+						low=med;
+					else
+						high=med;
+				} 
+				while(low<high-1);
+				while(temp>=a[low+1])
+					low++;
+			}
+		k=k-l-m;
+		i=i-l;
+		
+		while(i>low)
+		{
+			a[k]=a[i];
+			i--;
+			k--;
+			l++;
+		}
+		
+		a[k]=temp;
+		return l;
+	
+}
+
+int desc(int a[],int i,int k,int m)
+{
+	int l,temp,low,high,med;
+	if(m==-1)
+		return 0;
+	
+		temp=a[i+m+1];
+		l=desc(a,i,k,m-1);
+		if(temp<a[0])
+			low=-1;
+		else 
+			{
+				high=i-1;
+				low=0;
+				do
+				{
+					med=(low+high)/2;
+					if(temp>a[med])
+						low=med;
+					else
+						high=med;
+				} 
+				while(low<high-1);
+				while(temp>=a[low+1])
+					low++;
+			}
+		k=k-l-m;
+		i=i-l;
+		
+		while(i>low)
+		{
+			a[k]=a[i];
+			i--;
+			k--;
+			l++;
+		}
+		
+		a[k]=temp;
+		return l;
+	
+}
+
+void useme(int a[],int n)
+{
+	int i=0,k,m;
+	while(i<n-1)
+	{
+		if(a[i]>a[i+1])
+		{
+			k=i+1;
+			while((a[k]>a[k+1])&&(k<n-1))
+				k++;
+			if(k!=(i+1))
+			{
+				m=k-i-1;
+				desc(a,i,k,m);
+				i=k;
+			}
+			else
+			{
+				while((a[k]<=a[k+1])&&(k<n-1)&&a[k+1]<a[i])
+					k++;
+				m=k-i-1;
+				asc(a,i,k,m);
+				i=k;
+			}
+		}
+		else
+			i++;
+	}
+}
+
+
+int main()
+   {int i,n;
+    
+    printf("Enter size: ");
+    scanf("%d",&n);
+    
+    int c[n];
+    
+    srand(time(0));
+    for(i=0;i<n;i++)
+    	c[i]=rand();
+    clock_t start,end; 
+    start = clock(); 
+    useme(c,n); 
+    end=clock(); 
+   // for(i=0;i<n;i++)
+    //	printf("%d ",c[i]);
+    double total = ((double)(end-start))/CLOCKS_PER_SEC; // in seconds 
+  
+    printf("\n\n\nfun() took %f seconds to execute \n", total); 
+    return 0; 
+    
+   }
